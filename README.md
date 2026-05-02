@@ -7,13 +7,12 @@
 ![GSAP](https://img.shields.io/badge/GSAP-3-88CE02?style=flat-square&logo=greensock)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38bdf8?style=flat-square&logo=tailwindcss)
 
-**Status: MVP / Work in Progress** — Hero section and Navbar are complete with animations. The remaining sections exist as placeholders and will be implemented with progressively more advanced GSAP features.
-
+**Status: Work in Progress** 
 ---
 
 ## Why this exists
 
-Two goals in one project: a live portfolio for recruiters, and a hands-on study of GSAP. Each section is mapped to a specific GSAP concept — so as the portfolio grows, so does the animation complexity.
+Two goals in one project: a live portfolio , and a hands-on study of GSAP. Each section is mapped to a specific GSAP concept — so as the portfolio grows, so does the animation complexity.
 
 ---
 
@@ -26,19 +25,6 @@ Two goals in one project: a live portfolio for recruiters, and a hands-on study 
 | Dark mode | CSS custom properties themed via Tailwind |
 | Data layer | All content centralized in `src/lib/data.ts`, zero hardcoded strings |
 | Type safety | Full TypeScript with strict mode throughout |
-
----
-
-## Roadmap
-
-| Section | GSAP Feature | Status |
-|---|---|---|
-| Hero | `gsap.from()` + `TextPlugin` | ✅ Done |
-| About | `ScrollTrigger` fade-in | Planned |
-| Skills | `stagger` progress bars | Planned |
-| Projects | `ScrollTrigger` + `scrub` | Planned |
-| Experience | `gsap.timeline()` | Planned |
-| Contact | Custom easing | Planned |
 
 ---
 
@@ -55,7 +41,7 @@ Two goals in one project: a live portfolio for recruiters, and a hands-on study 
 
 ```bash
 npm install
-npm run dev   # → http://localhost:3000
+npm run dev  
 ```
 
 ---

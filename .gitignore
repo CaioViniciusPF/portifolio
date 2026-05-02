@@ -7,6 +7,8 @@ node_modules/
 .env*.local
 
 .DS_Store
+Thumbs.db
+desktop.ini
 *.pem
 
 npm-debug.log*
@@ -17,3 +19,5 @@ yarn-error.log*
 next-env.d.ts
 
 .vercel
+
+.claude/

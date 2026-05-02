@@ -5,7 +5,7 @@
 - Cada seção futuramente usará uma feature diferente do GSAP
 
 ## Stack
-- Next.js 14+ (App Router)
+- Next.js 15+ (App Router)
 - TypeScript
 - Tailwind CSS
 - GSAP + @gsap/react (usar sempre useGSAP ao invés de useEffect para animações)
@@ -46,6 +46,32 @@ src/
 | Projetos | `ScrollTrigger` + `scrub` nos cards | Pendente |
 | Experiência | `gsap.timeline()` na linha do tempo | Pendente |
 | Contato | `gsap.from()` com ease personalizado | Pendente |
+
+## Padrão de Commits
+
+Seguir Conventional Commits. Nunca adicionar assinatura `Co-Authored-By`.
+
+**Tipos:**
+- `feat:` — nova funcionalidade
+- `fix:` — correção de bug
+- `chore:` — configuração, dependências, build
+- `style:` — ajustes visuais/CSS sem mudança de lógica
+- `refactor:` — reorganização de código sem mudança de comportamento
+- `docs:` — documentação
+
+**Formato:**
+```
+tipo: descrição curta em minúsculo
+
+Corpo opcional explicando o porquê da mudança (não o que).
+```
+
+**Exemplos:**
+```
+feat: add About section with ScrollTrigger fade-in
+fix: navbar animation firing twice on remount
+chore: upgrade to Next.js 15 + React 19
+```
 
 ## O que NÃO fazer
 - Não usar `useEffect` para animações GSAP
