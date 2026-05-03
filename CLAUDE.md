@@ -37,15 +37,18 @@ src/
 - Estilização com Tailwind, GSAP apenas para animações
 - Componentes funcionais com hooks, nunca class components
 
-## Plano de Seções e suas features GSAP
+## Seções e suas features GSAP
 | Seção | Feature GSAP | Status |
 |---|---|---|
 | Hero | `gsap.from()` + `TextPlugin` | Implementado |
-| Sobre mim | `ScrollTrigger` com fade | Pendente |
-| Habilidades | `stagger` nas barras de progresso | Pendente |
-| Projetos | `ScrollTrigger` + `scrub` nos cards | Pendente |
-| Experiência | `gsap.timeline()` na linha do tempo | Pendente |
-| Contato | `gsap.from()` com ease personalizado | Pendente |
+| Sobre mim | `ScrollTrigger` fade | Implementado (MVP) |
+| Habilidades | `stagger` nas tags | Implementado (MVP) |
+| Experiência | `stagger` sequencial | Implementado (MVP) |
+| Contato | `stagger` nos cards | Implementado (MVP) |
+| Projetos | `ScrollTrigger` + `scrub` | Removido do MVP — sem projetos para listar ainda |
+
+> MVP usa animações simples (`gsap.from` + `ScrollTrigger`) em todas as seções novas.
+> Animações mais complexas ficam para iterações futuras.
 
 ## Padrão de Commits
 

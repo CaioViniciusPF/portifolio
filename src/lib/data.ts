@@ -5,21 +5,103 @@ export const siteData: SiteData = {
     greeting: "Olá, eu sou",
     name: "Caio Vinicius",
     roles: [
-      "Desenvolvedor Frontend",
-      "Entusiasta de UI/UX",
-      "Aprendiz de GSAP",
+      "Desenvolvedor Front-end",
+      "Estudante de Eng. de Computação — UFC",
+      "Aprendiz de GSAP & Three.js",
     ],
-    bio: "Apaixonado por criar interfaces modernas e animações fluidas. Este site é ao mesmo tempo meu portfólio e meu laboratório de estudos com GSAP.",
+    bio: "Desenvolvedor Front-end com experiência em React, Next.js e TypeScript. Atualmente bolsista na Altlab/UFC. Apaixonado por interfaces e animações fluidas.",
     cta: {
-      primary: { label: "Ver projetos", href: "#projects" },
+      primary: { label: "Ver experiência", href: "#experience" },
       secondary: { label: "Fale comigo", href: "#contact" },
     },
   },
+
   nav: [
     { label: "Sobre", href: "#about" },
     { label: "Habilidades", href: "#skills" },
-    { label: "Projetos", href: "#projects" },
     { label: "Experiência", href: "#experience" },
     { label: "Contato", href: "#contact" },
   ],
+
+  about: {
+    paragraphs: [
+      "Desenvolvedor Front-end com experiência prática em React, Next.js, TypeScript e Tailwind CSS, com foco em interfaces responsivas e consumo de APIs REST.",
+      "Atualmente bolsista no laboratório Altlab da UFC, onde desenvolvo o sistema WiseControl — integrando front-end e back-end com Next.js, React e MUI. Antes disso, atuei como Diretor de Projetos na Empresa Júnior GTI, liderando equipe e entregando aplicações para clientes reais.",
+      "Estudo GSAP e Three.js para aprofundar animações web e experiências interativas — este site é o laboratório disso.",
+    ],
+    highlights: [
+      { label: "Localização", value: "Fortaleza, CE" },
+      { label: "Formação", value: "Eng. Computação — UFC" },
+      { label: "Experiência", value: "~3 anos" },
+      { label: "Foco", value: "Front-end" },
+    ],
+  },
+
+  skills: [
+    {
+      category: "Frontend",
+      skills: ["React", "Next.js", "TypeScript", "JavaScript", "HTML5", "CSS3", "Tailwind CSS", "MUI"],
+    },
+    {
+      category: "Ferramentas",
+      skills: ["Git", "GitHub", "Figma", "Node.js"],
+    },
+    {
+      category: "Outros",
+      skills: ["APIs REST", "Design Responsivo", "WordPress", "PHP"],
+    },
+  ],
+
+  experience: [
+    {
+      role: "Desenvolvedor Front-end",
+      company: "Altlab — UFC",
+      period: "Ago/2025 – Atual",
+      location: "Fortaleza, CE · Remoto",
+      description: [
+        "Desenvolvimento do sistema WiseControl com Next.js, React e MUI.",
+        "Integração com APIs REST para consumo e exibição de dados do back-end.",
+        "Construção de interfaces responsivas com foco em usabilidade e boas práticas.",
+      ],
+      tech: ["Next.js", "React", "MUI", "TypeScript", "Git"],
+    },
+    {
+      role: "Diretor de Projetos",
+      company: "Empresa Júnior GTI",
+      period: "Jan/2024 – Ago/2025",
+      location: "Fortaleza, CE · Híbrido",
+      description: [
+        "Liderança do setor de projetos em empresa de desenvolvimento web com foco em front-end.",
+        "Desenvolvimento de aplicações e landing pages responsivas com React, Next.js e Tailwind.",
+        "Gestão de equipe, prazos e processos para clientes reais.",
+      ],
+      tech: ["React", "Next.js", "Tailwind CSS", "JavaScript", "Git"],
+    },
+    {
+      role: "Estagiário Front-end",
+      company: "Midiat",
+      period: "Jun/2022 – Fev/2023",
+      location: "Fortaleza, CE · Presencial",
+      description: [
+        "Desenvolvimento de projetos web com WordPress, HTML, CSS e JavaScript.",
+        "Manutenção do sistema interno com PHP.",
+      ],
+      tech: ["WordPress", "HTML", "CSS", "JavaScript", "PHP"],
+    },
+  ],
+
+  education: [
+    {
+      degree: "Engenharia de Computação",
+      institution: "Universidade Federal do Ceará (UFC)",
+      period: "2023 – 2028",
+    },
+  ],
+
+  contact: {
+    email: "freirescaiovini@gmail.com",
+    github: "github.com/CaioViniciusPF",
+    linkedin: "linkedin.com/in/caiovinicius",
+    location: "Fortaleza, CE",
+  },
 };
