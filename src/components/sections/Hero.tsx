@@ -31,7 +31,7 @@ export default function Hero({ data }: HeroProps) {
       tl.from(greetingRef.current, {
         y: 20,
         opacity: 0,
-        duration: 0.6,
+        duration: 0.45,
       });
 
       tl.from(
@@ -39,13 +39,13 @@ export default function Hero({ data }: HeroProps) {
         {
           y: 30,
           opacity: 0,
-          duration: 0.7,
+          duration: 0.5,
         },
-        "-=0.3"
+        "-=0.25"
       );
 
       data.roles.forEach((role, i) => {
-        const position = i === 0 ? "-=0.6" : "+=0.4";
+        const position = i === 0 ? "-=0.5" : "+=0.25";
 
         tl.addLabel(`typing-${i}`, position);
 
@@ -57,7 +57,7 @@ export default function Hero({ data }: HeroProps) {
         tl.to(
           roleRefs.current[i],
           {
-            duration: role.length * 0.08,
+            duration: role.length * 0.06,
             text: { value: role, delimiter: "" },
             ease: "none",
           },
@@ -70,9 +70,9 @@ export default function Hero({ data }: HeroProps) {
         {
           y: 20,
           opacity: 0,
-          duration: 0.6,
+          duration: 0.45,
         },
-        "+=0.4"
+        "+=0.25"
       );
 
       tl.from(
@@ -80,18 +80,18 @@ export default function Hero({ data }: HeroProps) {
         {
           y: 20,
           opacity: 0,
-          duration: 0.6,
+          duration: 0.45,
         },
-        "-=0.3"
+        "-=0.2"
       );
 
       tl.from(
         scrollIndicatorRef.current,
         {
           opacity: 0,
-          duration: 0.5,
+          duration: 0.4,
         },
-        "+=0.5"
+        "+=0.3"
       );
 
       gsap.to(scrollIndicatorRef.current, {
@@ -110,7 +110,7 @@ export default function Hero({ data }: HeroProps) {
     <section
       ref={containerRef}
       id="hero"
-      className="relative min-h-screen flex flex-col items-start justify-center px-6 max-w-6xl mx-auto"
+      className="relative min-h-screen flex flex-col items-start justify-center px-6 max-w-6xl mx-auto overflow-hidden"
     >
       <div
         className="absolute inset-0 -z-10 opacity-[0.03]"
@@ -123,7 +123,7 @@ export default function Hero({ data }: HeroProps) {
 
       <div className="absolute top-1/4 left-1/4 -z-10 w-96 h-96 rounded-full bg-accent/5 blur-3xl" />
 
-      <div className="max-w-3xl pt-24">
+      <div className="w-full max-w-3xl pt-24">
         <p
           ref={greetingRef}
           className="font-mono text-accent text-lg mb-3 tracking-widest opacity-0"

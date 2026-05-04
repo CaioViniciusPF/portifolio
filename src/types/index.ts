@@ -46,11 +46,22 @@ export interface ContactData {
   location: string;
 }
 
+export interface ProjectItem {
+  title: string;
+  description: string;
+  tech: string[];
+  context: string;
+  image?: string;
+  link?: string;
+  github?: string;
+}
+
 export interface SiteData {
   hero: HeroData;
   nav: NavLink[];
   about: AboutData;
   skills: SkillGroup[];
+  projects: ProjectItem[];
   experience: ExperienceItem[];
   education: EducationItem[];
   contact: ContactData;

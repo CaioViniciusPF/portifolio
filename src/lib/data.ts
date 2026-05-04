@@ -7,7 +7,6 @@ export const siteData: SiteData = {
     roles: [
       "Desenvolvedor Front-end",
       "Estudante de Eng. de Computação — UFC",
-      "Aprendiz de GSAP & Three.js",
     ],
     bio: "Desenvolvedor Front-end com experiência em React, Next.js e TypeScript. Atualmente bolsista na Altlab/UFC. Apaixonado por interfaces e animações fluidas.",
     cta: {
@@ -19,6 +18,7 @@ export const siteData: SiteData = {
   nav: [
     { label: "Sobre", href: "#about" },
     { label: "Habilidades", href: "#skills" },
+    { label: "Projetos", href: "#projects" },
     { label: "Experiência", href: "#experience" },
     { label: "Contato", href: "#contact" },
   ],
@@ -49,6 +49,22 @@ export const siteData: SiteData = {
     {
       category: "Outros",
       skills: ["APIs REST", "Design Responsivo", "WordPress", "PHP"],
+    },
+  ],
+
+  projects: [
+    {
+      title: "WiseControl",
+      description: "Sistema de monitoramento e controle desenvolvido para o laboratório Altlab da UFC. Interface com Next.js, React e MUI integrada a APIs REST do back-end.",
+      tech: ["Next.js", "React", "MUI", "TypeScript"],
+      context: "Altlab — UFC",
+    },
+    {
+      title: "Portfólio",
+      description: "Este site — portfólio pessoal e playground de estudos com GSAP. Cada seção explora uma feature diferente da biblioteca.",
+      tech: ["Next.js", "GSAP", "TypeScript", "Tailwind CSS"],
+      context: "Pessoal",
+      github: "github.com/CaioViniciusPF/portfolio",
     },
   ],
 

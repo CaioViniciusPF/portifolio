@@ -67,7 +67,7 @@ export default function Experience({ data, education }: ExperienceProps) {
       <div className="max-w-6xl mx-auto">
         <div ref={headingRef} className="mb-14">
           <p className="font-mono text-accent text-sm tracking-widest uppercase mb-2">
-            03. experiência
+            04. experiência
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-text-main">
             Experiência

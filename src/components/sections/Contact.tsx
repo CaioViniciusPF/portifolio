@@ -100,7 +100,7 @@ export default function Contact({ data }: ContactProps) {
       <div className="max-w-6xl mx-auto">
         <div ref={headingRef} className="mb-14">
           <p className="font-mono text-accent text-sm tracking-widest uppercase mb-2">
-            04. contato
+            05. contato
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-text-main">
             Contato
