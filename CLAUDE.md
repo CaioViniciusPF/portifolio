@@ -64,16 +64,20 @@ Seguir Conventional Commits. Nunca adicionar assinatura `Co-Authored-By`.
 
 **Formato:**
 ```
-tipo: descrição curta em minúsculo
+tipo(escopo): descrição curta em minúsculo
 
 Corpo opcional explicando o porquê da mudança (não o que).
 ```
 
+O escopo é opcional mas recomendado — indica o contexto da mudança (ex: seção, arquivo, feature).
+
 **Exemplos:**
 ```
-feat: add About section with ScrollTrigger fade-in
-fix: navbar animation firing twice on remount
-chore: upgrade to Next.js 15 + React 19
+feat(projects): add Projects section with gradient fallback
+fix(navbar): animation firing twice on remount
+chore(deps): upgrade to Next.js 15 + React 19
+style(hero): speed up text animation by 25%
+docs(readme): rewrite as technical business card
 ```
 
 ## O que NÃO fazer

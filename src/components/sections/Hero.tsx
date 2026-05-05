@@ -57,7 +57,7 @@ export default function Hero({ data }: HeroProps) {
         tl.to(
           roleRefs.current[i],
           {
-            duration: role.length * 0.06,
+            duration: role.length * 0.09,
             text: { value: role, delimiter: "" },
             ease: "none",
           },

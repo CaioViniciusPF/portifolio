@@ -5,7 +5,7 @@ export const siteData: SiteData = {
     greeting: "Olá, eu sou",
     name: "Caio Vinicius",
     roles: [
-      "Desenvolvedor Front-end",
+      "Desenvolvedor Web",
       "Estudante de Eng. de Computação — UFC",
     ],
     bio: "Desenvolvedor Front-end com experiência em React, Next.js e TypeScript. Atualmente bolsista na Altlab/UFC. Apaixonado por interfaces e animações fluidas.",
