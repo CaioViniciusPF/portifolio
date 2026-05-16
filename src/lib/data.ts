@@ -2,13 +2,13 @@ import type { SiteData } from "@/types";
 
 export const siteData: SiteData = {
   hero: {
-    greeting: "Olá, eu sou",
+    greeting: "Olá, me chamo",
     name: "Caio Vinicius",
     roles: [
-      "Desenvolvedor Web",
-      "Estudante de Eng. de Computação — UFC",
+      "sou desenvolvedor web e estudante de engenharia da computação, UFC Ceará.",
     ],
     bio: "Desenvolvedor Front-end com experiência em React, Next.js e TypeScript. Atualmente bolsista na Altlab/UFC. Apaixonado por interfaces e animações fluidas.",
+    photo: "/images/hero.jpeg",
     cta: {
       primary: { label: "Ver experiência", href: "#experience" },
       secondary: { label: "Fale comigo", href: "#contact" },
@@ -58,6 +58,7 @@ export const siteData: SiteData = {
       description: "Sistema de monitoramento e controle desenvolvido para o laboratório Altlab da UFC. Interface com Next.js, React e MUI integrada a APIs REST do back-end.",
       tech: ["Next.js", "React", "MUI", "TypeScript"],
       context: "Altlab — UFC",
+      image: "/images/projects/wisecontrol.png",
     },
     {
       title: "Portfólio",

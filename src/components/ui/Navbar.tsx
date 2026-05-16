@@ -35,19 +35,25 @@ export default function Navbar({ links }: NavbarProps) {
     () => {
       if (hasAnimated) {
         gsap.set(navRef.current, { y: 0, opacity: 1 });
-        return;
       }
+    },
+    { scope: navRef, dependencies: [] }
+  );
+
+  useEffect(() => {
+    if (hasAnimated) return;
+    const onReady = () => {
       hasAnimated = true;
       gsap.to(navRef.current, {
         y: 0,
         opacity: 1,
-        duration: 1.6,
+        duration: 0.6,
         ease: "power3.out",
-        delay: 0.8,
       });
-    },
-    { scope: navRef, dependencies: [] }
-  );
+    };
+    window.addEventListener("hero:ready", onReady);
+    return () => window.removeEventListener("hero:ready", onReady);
+  }, []);
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -68,7 +74,7 @@ export default function Navbar({ links }: NavbarProps) {
             onClick={closeMenu}
             className="font-mono text-accent font-bold text-lg tracking-wider hover:opacity-80 transition-opacity"
           >
-            &lt;Portfólio /&gt;
+            &lt;CaioVini /&gt;
           </a>
 
           <ul className="hidden lg:flex items-center gap-8">

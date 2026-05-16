@@ -2,7 +2,8 @@ export interface HeroData {
   greeting: string;
   name: string;
   roles: string[];
-  bio: string;
+  bio?: string;
+  photo?: string;
   cta: {
     primary: { label: string; href: string };
     secondary: { label: string; href: string };
