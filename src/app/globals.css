@@ -32,6 +32,29 @@
 html {
   scroll-behavior: smooth;
   overflow-x: hidden;
+  --vt-x: 50%;
+  --vt-y: 50%;
+}
+
+@keyframes vt-reveal {
+  from {
+    clip-path: circle(0px at var(--vt-x) var(--vt-y));
+  }
+  to {
+    clip-path: circle(150vmax at var(--vt-x) var(--vt-y));
+  }
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-new(root) {
+    animation: vt-reveal 0.7s cubic-bezier(0.76, 0, 0.24, 1) forwards;
+
+  }
+
+  ::view-transition-old(root) {
+    animation: none;
+
+  }
 }
 
 body {

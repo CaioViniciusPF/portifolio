@@ -118,8 +118,18 @@ export default function Contact({ data }: ContactProps) {
                 href={link.href}
                 target={link.href.startsWith("http") ? "_blank" : undefined}
                 rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="flex flex-col gap-3 p-5 bg-surface border border-border rounded-lg hover:border-accent hover:text-accent transition-colors duration-200 group"
+                className="relative flex flex-col gap-3 p-5 bg-surface border border-border rounded-lg hover:border-accent hover:text-accent transition-colors duration-200 group"
               >
+                {link.href.startsWith("http") && (
+                  <svg
+                    className="absolute top-4 right-4 w-3.5 h-3.5 text-text-muted group-hover:text-accent transition-colors duration-200"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                )}
                 <span className="text-text-muted group-hover:text-accent transition-colors duration-200">
                   {link.icon}
                 </span>
