@@ -4,12 +4,12 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import type { SkillGroup } from "@/types";
+import type { SkillsData } from "@/types";
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface SkillsProps {
-  data: SkillGroup[];
+  data: SkillsData;
 }
 
 export default function Skills({ data }: SkillsProps) {
@@ -55,15 +55,15 @@ export default function Skills({ data }: SkillsProps) {
       <div className="max-w-6xl mx-auto">
         <div ref={headingRef} className="mb-14">
           <p className="font-mono text-accent text-sm tracking-widest uppercase mb-2">
-            02. habilidades
+            02. {data.eyebrow}
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-text-main">
-            Habilidades
+            {data.title}
           </h2>
         </div>
 
         <div ref={groupsRef} className="flex flex-col gap-10">
-          {data.map((group) => (
+          {data.groups.map((group) => (
             <div key={group.category}>
               <p className="font-mono text-text-muted text-sm tracking-widest uppercase mb-4">
                 {group.category}

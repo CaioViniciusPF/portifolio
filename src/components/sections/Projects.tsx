@@ -5,12 +5,12 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import Image from "next/image";
-import type { ProjectItem } from "@/types";
+import type { ProjectsData } from "@/types";
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface ProjectsProps {
-  data: ProjectItem[];
+  data: ProjectsData;
 }
 
 const GRADIENTS = [
@@ -61,10 +61,10 @@ export default function Projects({ data }: ProjectsProps) {
       <div className="max-w-6xl mx-auto">
         <div ref={headingRef} className="mb-14">
           <p className="font-mono text-accent text-sm tracking-widest uppercase mb-2">
-            03. projetos
+            03. {data.eyebrow}
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-text-main">
-            Projetos
+            {data.title}
           </h2>
         </div>
 
@@ -72,7 +72,7 @@ export default function Projects({ data }: ProjectsProps) {
           ref={gridRef}
           className="grid md:grid-cols-2 lg:grid-cols-3 gap-6"
         >
-          {data.map((item, i) => (
+          {data.items.map((item, i) => (
             <article
               key={item.title}
               className="flex flex-col bg-surface border border-border rounded-lg overflow-hidden hover:border-accent/50 transition-colors duration-300"
@@ -146,7 +146,7 @@ export default function Projects({ data }: ProjectsProps) {
                         <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
                         </svg>
-                        Ver site
+                        {data.viewSiteLabel}
                       </a>
                     )}
                   </div>

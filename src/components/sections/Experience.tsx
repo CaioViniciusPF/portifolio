@@ -4,12 +4,12 @@ import { useRef } from "react";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import type { ExperienceItem, EducationItem } from "@/types";
+import type { ExperienceData, EducationItem } from "@/types";
 
 gsap.registerPlugin(ScrollTrigger);
 
 interface ExperienceProps {
-  data: ExperienceItem[];
+  data: ExperienceData;
   education: EducationItem[];
 }
 
@@ -67,15 +67,15 @@ export default function Experience({ data, education }: ExperienceProps) {
       <div className="max-w-6xl mx-auto">
         <div ref={headingRef} className="mb-14">
           <p className="font-mono text-accent text-sm tracking-widest uppercase mb-2">
-            04. experiência
+            04. {data.eyebrow}
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-text-main">
-            Experiência
+            {data.title}
           </h2>
         </div>
 
         <div ref={timelineRef} className="flex flex-col gap-0">
-          {data.map((item, i) => (
+          {data.items.map((item, i) => (
             <div
               key={i}
               className="relative pl-8 pb-12 border-l border-border last:pb-0"
@@ -116,7 +116,7 @@ export default function Experience({ data, education }: ExperienceProps) {
 
         <div ref={educationRef} className="mt-16 pt-12 border-t border-border">
           <p className="font-mono text-text-muted text-sm tracking-widest uppercase mb-6">
-            Formação
+            {data.educationTitle}
           </p>
           {education.map((e, i) => (
             <div key={i} className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1">

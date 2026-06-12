@@ -67,10 +67,10 @@ export default function About({ data }: AboutProps) {
       <div className="max-w-6xl mx-auto">
         <div ref={headingRef} className="mb-14">
           <p className="font-mono text-accent text-sm tracking-widest uppercase mb-2">
-            01. sobre mim
+            01. {data.eyebrow}
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-text-main">
-            Sobre mim
+            {data.title}
           </h2>
         </div>
 

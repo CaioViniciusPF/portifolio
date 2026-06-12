@@ -55,7 +55,6 @@ export default function Hero({ data }: HeroProps) {
         [cursor0Ref.current, cursor1Ref.current, cursor2Ref.current],
         { visibility: "hidden" }
       );
-      gsap.set(textRef.current, { textAlign: "center" });
       gsap.set(ctaRef.current, { autoAlpha: 0 });
 
       if (isDesktop) {
@@ -97,21 +96,6 @@ export default function Hero({ data }: HeroProps) {
       );
 
       tl.addLabel("transition", "+=0.5");
-
-      tl.call(
-        () => {
-          const containerRect = textRef.current!.getBoundingClientRect();
-          const anchorRect = greetingRef.current!.getBoundingClientRect();
-          const centerOffset = anchorRect.left - containerRect.left;
-          const currentX = gsap.getProperty(textRef.current, "x") as number;
-          gsap.set(textRef.current, {
-            x: currentX + centerOffset,
-            textAlign: "left",
-          });
-        },
-        [],
-        "transition"
-      );
 
       tl.to(
         textRef.current,

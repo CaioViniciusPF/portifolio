@@ -5,6 +5,7 @@ import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import type { ContactData } from "@/types";
+import ContactForm from "./ContactForm";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -44,7 +45,7 @@ const links = (data: ContactData) => [
     ),
   },
   {
-    label: "Localização",
+    label: data.locationLabel,
     value: data.location,
     href: null,
     icon: (
@@ -100,61 +101,65 @@ export default function Contact({ data }: ContactProps) {
       <div className="max-w-6xl mx-auto">
         <div ref={headingRef} className="mb-14">
           <p className="font-mono text-accent text-sm tracking-widest uppercase mb-2">
-            05. contato
+            05. {data.eyebrow}
           </p>
           <h2 className="text-4xl md:text-5xl font-bold text-text-main">
-            Contato
+            {data.title}
           </h2>
           <p className="text-text-muted text-lg mt-4 max-w-xl">
-            Aberto a oportunidades, colaborações e conversas. Pode mandar mensagem.
+            {data.description}
           </p>
         </div>
 
-        <div ref={cardsRef} className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
-          {contactLinks.map((link) =>
-            link.href ? (
-              <a
-                key={link.label}
-                href={link.href}
-                target={link.href.startsWith("http") ? "_blank" : undefined}
-                rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                className="relative flex flex-col gap-3 p-5 bg-surface border border-border rounded-lg hover:border-accent hover:text-accent transition-colors duration-200 group"
-              >
-                {link.href.startsWith("http") && (
-                  <svg
-                    className="absolute top-4 right-4 w-3.5 h-3.5 text-text-muted group-hover:text-accent transition-colors duration-200"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                )}
-                <span className="text-text-muted group-hover:text-accent transition-colors duration-200">
-                  {link.icon}
-                </span>
-                <div>
-                  <p className="font-mono text-xs text-text-muted tracking-widest uppercase mb-0.5">
-                    {link.label}
-                  </p>
-                  <p className="text-text-main text-sm font-medium break-all">{link.value}</p>
+        <div className="grid lg:grid-cols-2 gap-12 items-start">
+          <ContactForm content={data.form} />
+
+          <div ref={cardsRef} className="grid sm:grid-cols-2 gap-4 h-fit">
+            {contactLinks.map((link) =>
+              link.href ? (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target={link.href.startsWith("http") ? "_blank" : undefined}
+                  rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                  className="relative flex flex-col gap-3 p-5 bg-surface border border-border rounded-lg hover:border-accent hover:text-accent transition-colors duration-200 group"
+                >
+                  {link.href.startsWith("http") && (
+                    <svg
+                      className="absolute top-4 right-4 w-3.5 h-3.5 text-text-muted group-hover:text-accent transition-colors duration-200"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  )}
+                  <span className="text-text-muted group-hover:text-accent transition-colors duration-200">
+                    {link.icon}
+                  </span>
+                  <div>
+                    <p className="font-mono text-xs text-text-muted tracking-widest uppercase mb-0.5">
+                      {link.label}
+                    </p>
+                    <p className="text-text-main text-sm font-medium break-all">{link.value}</p>
+                  </div>
+                </a>
+              ) : (
+                <div
+                  key={link.label}
+                  className="flex flex-col gap-3 p-5 bg-surface border border-border rounded-lg"
+                >
+                  <span className="text-text-muted">{link.icon}</span>
+                  <div>
+                    <p className="font-mono text-xs text-text-muted tracking-widest uppercase mb-0.5">
+                      {link.label}
+                    </p>
+                    <p className="text-text-main text-sm font-medium">{link.value}</p>
+                  </div>
                 </div>
-              </a>
-            ) : (
-              <div
-                key={link.label}
-                className="flex flex-col gap-3 p-5 bg-surface border border-border rounded-lg"
-              >
-                <span className="text-text-muted">{link.icon}</span>
-                <div>
-                  <p className="font-mono text-xs text-text-muted tracking-widest uppercase mb-0.5">
-                    {link.label}
-                  </p>
-                  <p className="text-text-main text-sm font-medium">{link.value}</p>
-                </div>
-              </div>
-            )
-          )}
+              )
+            )}
+          </div>
         </div>
       </div>
     </section>

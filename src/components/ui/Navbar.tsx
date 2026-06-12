@@ -5,6 +5,22 @@ import { useTheme } from "next-themes";
 import { useGSAP } from "@gsap/react";
 import gsap from "gsap";
 import type { NavLink } from "@/types";
+import { useLanguage } from "./LanguageProvider";
+
+function LanguageToggle() {
+  const { locale, toggleLocale } = useLanguage();
+  const isPt = locale === "pt";
+
+  return (
+    <button
+      onClick={toggleLocale}
+      aria-label={isPt ? "Switch to English" : "Mudar para português"}
+      className="w-9 h-9 flex items-center justify-center rounded-full border border-border hover:border-accent text-text-muted hover:text-accent font-mono text-xs font-semibold tracking-wider transition-colors duration-200"
+    >
+      {isPt ? "PT" : "EN"}
+    </button>
+  );
+}
 
 function ThemeToggle() {
   const [mounted, setMounted] = useState(false);
@@ -43,7 +59,7 @@ function ThemeToggle() {
       ref={btnRef}
       onClick={handleClick}
       aria-label={isDark ? "Ativar modo claro" : "Ativar modo escuro"}
-      className="w-8 h-8 flex items-center justify-center text-text-muted hover:text-accent transition-colors duration-200"
+      className="w-9 h-9 flex items-center justify-center rounded-full border border-border hover:border-accent text-text-muted hover:text-accent transition-colors duration-200"
     >
       {isDark ? (
         <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -58,13 +74,74 @@ function ThemeToggle() {
   );
 }
 
+function CurriculoButton({ label, className, onClick }: { label: string; className?: string; onClick?: () => void }) {
+  const btnRef = useRef<HTMLAnchorElement>(null);
+  const fillRef = useRef<HTMLSpanElement>(null);
+  const labelRef = useRef<HTMLSpanElement>(null);
+  const iconRef = useRef<HTMLSpanElement>(null);
+
+  useGSAP(
+    () => {
+      gsap.set(fillRef.current, { scaleX: 0, transformOrigin: "left center" });
+
+      const enter = () => {
+        const bg = getComputedStyle(document.documentElement)
+          .getPropertyValue("--color-background")
+          .trim();
+        gsap.killTweensOf([fillRef.current, labelRef.current, iconRef.current]);
+        gsap.set(fillRef.current, { transformOrigin: "left center" });
+        gsap.to(fillRef.current, { scaleX: 1, duration: 0.35, ease: "power3.out" });
+        gsap.to([labelRef.current, iconRef.current], { color: bg, duration: 0.2, ease: "none" });
+        gsap.to(iconRef.current, { x: 3, y: -3, duration: 0.35, ease: "power2.out" });
+      };
+
+      const leave = () => {
+        gsap.killTweensOf([fillRef.current, labelRef.current, iconRef.current]);
+        gsap.set([labelRef.current, iconRef.current], { clearProps: "color" });
+        gsap.set(fillRef.current, { transformOrigin: "right center" });
+        gsap.to(fillRef.current, { scaleX: 0, duration: 0.3, ease: "power3.in" });
+        gsap.to(iconRef.current, { x: 0, y: 0, duration: 0.3, ease: "power2.out" });
+      };
+
+      const el = btnRef.current;
+      el?.addEventListener("mouseenter", enter);
+      el?.addEventListener("mouseleave", leave);
+      return () => {
+        el?.removeEventListener("mouseenter", enter);
+        el?.removeEventListener("mouseleave", leave);
+      };
+    },
+    { scope: btnRef }
+  );
+
+  return (
+    <a
+      ref={btnRef}
+      href="/Caio_Vinicius_Curriculo.pdf"
+      target="_blank"
+      rel="noopener noreferrer"
+      onClick={onClick}
+      className={`relative inline-flex items-center gap-2 font-mono text-sm border border-accent rounded overflow-hidden ${className ?? ""}`}
+    >
+      <span ref={fillRef} className="absolute inset-0 bg-accent" />
+      <span ref={labelRef} className="relative z-10 text-accent">{label}</span>
+      <span ref={iconRef} className="relative z-10 text-accent">
+        <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+        </svg>
+      </span>
+    </a>
+  );
+}
+
 let hasAnimated = false;
 
 interface NavbarProps {
   links: NavLink[];
+  resumeLabel: string;
 }
 
-export default function Navbar({ links }: NavbarProps) {
+export default function Navbar({ links, resumeLabel }: NavbarProps) {
   const navRef = useRef<HTMLElement>(null);
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
@@ -149,14 +226,12 @@ export default function Navbar({ links }: NavbarProps) {
             ))}
           </ul>
 
-          <a
-            href="#contact"
-            className="hidden lg:inline-flex font-mono text-sm border border-accent text-accent px-4 py-2 rounded hover:bg-accent/10 transition-colors duration-200"
-          >
-            Currículo
-          </a>
+          <CurriculoButton label={resumeLabel} className="hidden lg:inline-flex px-4 py-2" />
 
-          <ThemeToggle />
+          <div className="flex items-center gap-2">
+            <LanguageToggle />
+            <ThemeToggle />
+          </div>
 
           <button
             className="lg:hidden flex flex-col justify-center items-center w-8 h-8 gap-1.5"
@@ -197,13 +272,7 @@ export default function Navbar({ links }: NavbarProps) {
               {link.label}
             </a>
           ))}
-          <a
-            href="#contact"
-            onClick={closeMenu}
-            className="mt-4 font-mono text-sm border border-accent text-accent px-6 py-3 rounded hover:bg-accent/10 transition-colors duration-200"
-          >
-            Currículo
-          </a>
+          <CurriculoButton label={resumeLabel} className="mt-4 px-6 py-3" onClick={closeMenu} />
         </div>
       )}
     </>
