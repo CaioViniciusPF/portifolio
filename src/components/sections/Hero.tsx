@@ -30,17 +30,23 @@ export default function Hero({ data }: HeroProps) {
 
   const ctaRef = useRef<HTMLDivElement>(null);
   const scrollIndicatorRef = useRef<HTMLDivElement>(null);
+  const tlRef = useRef<gsap.core.Timeline | null>(null);
 
   const role = data.roles[0] ?? "";
 
   useEffect(() => {
-    const onResize = () => {
+    const ensurePhotoVisible = () => {
       const photo = photoRef.current;
       if (!photo || window.innerWidth < 768) return;
       const currentOpacity = gsap.getProperty(photo, "opacity") as number;
       if (currentOpacity < 1) {
         gsap.to(photo, { autoAlpha: 1, x: 0, duration: 0.5, ease: "power2.out" });
       }
+    };
+
+    const onResize = () => {
+      if ((tlRef.current?.progress() ?? 1) < 1) return;
+      ensurePhotoVisible();
     };
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
@@ -50,6 +56,7 @@ export default function Hero({ data }: HeroProps) {
     () => {
       const isDesktop = window.innerWidth >= 768;
       const tl = gsap.timeline();
+      tlRef.current = tl;
 
       gsap.set(
         [cursor0Ref.current, cursor1Ref.current, cursor2Ref.current],
@@ -138,6 +145,14 @@ export default function Hero({ data }: HeroProps) {
         duration: 1,
         ease: "power1.inOut",
         delay: tl.duration(),
+      });
+
+      tl.call(() => {
+        if (window.innerWidth < 768) return;
+        const currentOpacity = gsap.getProperty(photoRef.current, "opacity") as number;
+        if (currentOpacity < 1) {
+          gsap.to(photoRef.current, { autoAlpha: 1, x: 0, duration: 0.5, ease: "power2.out" });
+        }
       });
     },
     { scope: containerRef }

@@ -143,7 +143,9 @@ interface NavbarProps {
 
 export default function Navbar({ links, resumeLabel }: NavbarProps) {
   const navRef = useRef<HTMLElement>(null);
-  const [scrolled, setScrolled] = useState(false);
+  const [scrolled, setScrolled] = useState(
+    () => typeof window !== "undefined" && window.scrollY > 40
+  );
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
