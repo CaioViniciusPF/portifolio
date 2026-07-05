@@ -16,7 +16,7 @@ export default function SiteContent() {
   const data = locale === "pt" ? siteData : siteDataEn;
 
   return (
-    <main key={locale} className="bg-background min-h-screen text-text-main">
+    <main key={locale} className="min-h-screen text-text-main">
       <Navbar links={data.nav} resumeLabel={data.resumeLabel} />
       <Hero data={data.hero} />
       <About data={data.about} />

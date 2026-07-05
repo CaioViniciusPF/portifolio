@@ -11,6 +11,10 @@ const config: Config = {
       fontFamily: {
         mono: ["var(--font-mono)", "monospace"],
         sans: ["var(--font-sans)", "sans-serif"],
+        display: ["var(--font-display)", "sans-serif"],
+      },
+      transitionTimingFunction: {
+        "out-expo": "cubic-bezier(0.16, 1, 0.3, 1)",
       },
       colors: {
         primary: "var(--color-primary)",

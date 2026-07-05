@@ -9,6 +9,7 @@ export const siteData: SiteData = {
     ],
     bio: "Desenvolvedor Front-end com experiência em React, Next.js e TypeScript. Atualmente bolsista na Altlab/UFC. Apaixonado por interfaces e animações fluidas.",
     photo: "/images/hero.jpeg",
+    scrollLabel: "scroll",
     cta: {
       primary: { label: "Ver experiência", href: "#experience" },
       secondary: { label: "Fale comigo", href: "#contact" },
@@ -64,6 +65,7 @@ export const siteData: SiteData = {
     eyebrow: "projetos",
     title: "Projetos",
     viewSiteLabel: "Ver site",
+    scrollHint: "( role para o lado )",
     items: [
       {
         title: "WiseControl",

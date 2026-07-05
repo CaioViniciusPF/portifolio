@@ -4,6 +4,7 @@ export interface HeroData {
   roles: string[];
   bio?: string;
   photo?: string;
+  scrollLabel: string;
   cta: {
     primary: { label: string; href: string };
     secondary: { label: string; href: string };
@@ -99,6 +100,7 @@ export interface ProjectsData {
   eyebrow: string;
   title: string;
   viewSiteLabel: string;
+  scrollHint: string;
   items: ProjectItem[];
 }
 

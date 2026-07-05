@@ -12,9 +12,6 @@
   --color-text-muted: #7a6070;
   --color-surface: #f0eed4;
   --color-border: #d1ce95;
-
-  --font-mono: "Fira Code", "Cascadia Code", monospace;
-  --font-sans: "Inter", system-ui, sans-serif;
 }
 
 .dark {
@@ -30,10 +27,22 @@
 }
 
 html {
-  scroll-behavior: smooth;
   overflow-x: hidden;
   --vt-x: 50%;
   --vt-y: 50%;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
 }
 
 @keyframes vt-reveal {
@@ -60,8 +69,19 @@ html {
 body {
   background-color: var(--color-background);
   color: var(--color-text);
-  font-family: var(--font-sans);
+  font-family: var(--font-sans), system-ui, sans-serif;
   overflow-x: hidden;
+}
+
+h1,
+h2,
+h3 {
+  text-wrap: balance;
+}
+
+::selection {
+  background-color: var(--color-accent);
+  color: var(--color-background);
 }
 
 .cursor-blink::after {

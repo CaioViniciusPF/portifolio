@@ -2,8 +2,7 @@
 
 import { useRef, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
+import { gsap, useGSAP } from "@/lib/gsap";
 import type { NavLink } from "@/types";
 import { useLanguage } from "./LanguageProvider";
 

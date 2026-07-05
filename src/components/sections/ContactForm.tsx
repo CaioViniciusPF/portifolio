@@ -1,12 +1,8 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
-import { useGSAP } from "@gsap/react";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { gsap, useGSAP } from "@/lib/gsap";
 import type { ContactFormContent } from "@/types";
-
-gsap.registerPlugin(ScrollTrigger);
 
 interface ContactFormProps {
   content: ContactFormContent;

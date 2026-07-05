@@ -6,6 +6,10 @@ Site-currículo single page de Caio Vinicius. Foco em estudo de GSAP — cada se
 ## Stack
 - Next.js 15+ (App Router), TypeScript, Tailwind CSS
 - GSAP + `@gsap/react` — usar sempre `useGSAP`, nunca `useEffect` para animações
+- Plugins GSAP registrados **só** em `src/lib/gsap.ts` — importar `gsap`/`useGSAP`/`ScrollTrigger`/`SplitText` de `@/lib/gsap`, nunca de `gsap` direto
+- `lenis` — smooth scroll (dirigido pelo ticker do GSAP em `ui/SmoothScroll.tsx`; `scroll-behavior: smooth` foi removido do CSS; âncoras com `anchors: { offset: -80 }`)
+- `three` — só as partículas do Hero (`components/three/HeroParticles.tsx`, lazy via `next/dynamic`)
+- Fontes via `next/font`: Bricolage Grotesque (`font-display`), Instrument Sans (`font-sans`), JetBrains Mono (`font-mono`)
 - `next-themes` — dark/light mode
 
 ## Comandos
@@ -21,8 +25,10 @@ src/
   components/
     SiteContent.tsx → client wrapper que escolhe os dados pelo idioma
     sections/   → Hero, About, Skills, Projects, Experience, Contact, ContactForm
-    ui/         → Navbar, ThemeProvider, ThemeTransition, LanguageProvider
+    three/      → HeroParticles (campo de pontos WebGL do Hero)
+    ui/         → Navbar, ThemeProvider, LanguageProvider, SmoothScroll
   lib/
+    gsap.ts     → registro central de plugins GSAP + constantes MOTION_OK/REDUCED/DESKTOP
     data.ts     → dados do currículo (pt-BR)
     data.en.ts  → dados em inglês — manter em sincronia com data.ts
   types/index.ts
@@ -36,14 +42,17 @@ public/images/
 - Tailwind com tokens do tema (`text-accent`, `bg-surface`, etc.) — nunca cores hardcoded
 - Componentes funcionais com hooks, sem class components
 - Sem comentários, exceto quando o porquê for não-óbvio
+- **Nunca** aplicar `transition-transform` (CSS) num elemento que o GSAP anima via transform — o transition intercepta as escritas do GSAP e o elemento trava no meio (aconteceu no h3 de Projects; hover em span interno resolve)
+- Animações respeitam `prefers-reduced-motion`: branch `MOTION_OK` completo, branch `REDUCED` com `gsap.set` para estado final — e eventos de contrato (`hero:ready`) disparam nos **dois** branches
+- Scrub/parallax só em desktop (≥768px); mobile ganha reveals simples
 
 ## Seções × GSAP
 | Seção | Feature |
 |---|---|
-| Hero | `TextPlugin` + `timeline` + slide |
+| Hero | `TextPlugin` (greeting/role) + `SplitText` mask no nome + clip reveal na foto + partículas three.js + parallax de saída |
 | Sobre mim | `ScrollTrigger` fade |
 | Habilidades | `stagger` nas tags |
-| Projetos | `ScrollTrigger` + stagger nos cards |
+| Projetos | galeria horizontal com pin + scrub (desktop; mobile mantém linhas verticais com clip reveal), `SplitText` no headline, parallax horizontal via `containerAnimation`, painel tipográfico outlined no placeholder |
 | Experiência | `stagger` sequencial |
 | Contato | `stagger` nos cards |
 
@@ -57,9 +66,11 @@ public/images/
 - `src/types/global.d.ts` declara os tipos de `document.startViewTransition`
 
 ## Hero — Animação em dois atos
-**Fase 1:** `TextPlugin` digita greeting → name → role[0], tudo centralizado na tela via `gsap.set(textRef, { x: shift })`.
+**Ato 1:** greeting digitado via `TextPlugin` (mono, escala de eyebrow) → nome gigante em `font-display` revelado com `SplitText` chars + mask (`yPercent 110→0`), ponto accent com scale pop → role digitado.
 
-**Fase 2:** `tl.call()` mede o offset com `getBoundingClientRect`, soma ao `x` atual e troca `textAlign` no mesmo frame (sem snap visual), depois anima `x → 0`. Foto aparece à direita (desktop). CTA usa `autoAlpha` para preservar espaço no layout e evitar reflow. Hero despacha `hero:ready` ao fim → Navbar escuta e anima entrada.
+**Ato 2:** texto desliza de centralizado (`x: shift`) para `x: 0`; foto (desktop) revela com `clip-path: inset(100%→0)` + `scale 1.15→1`, bloco accent offset atrás, grayscale com hover colorido. CTA usa `autoAlpha`. Hero despacha `hero:ready` em `"transition+=1.0"` → Navbar escuta e anima entrada (no branch reduced dispara via `delayedCall`). Parallax de saída: texto sobe e partículas esmaecem com scrub.
+
+**Partículas:** `HeroParticles` lê `--color-accent`/`--color-primary` via `getComputedStyle` e observa a classe do `<html>` (MutationObserver) para retween das cores na troca de tema. Pausa fora de vista (IntersectionObserver), DPR cap 1.5, disposal completo no unmount, não monta em reduced motion.
 
 ## Idiomas (pt-BR / en)
 `LanguageProvider` (context, persiste em `localStorage`) + toggle na Navbar (texto "PT" ↔ "EN"). `SiteContent.tsx` escolhe `siteData` ou `siteDataEn` e usa `key={locale}` para remontar as seções — as animações GSAP (incl. typing do Hero) replays na troca. Textos de UI (títulos de seção, "Currículo", "Ver site" etc.) vêm todos de `data.ts`/`data.en.ts` — nada de string visível hardcoded em componente. Ao adicionar conteúdo, **sempre atualizar os dois arquivos**.
