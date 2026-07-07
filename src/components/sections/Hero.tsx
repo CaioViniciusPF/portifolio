@@ -6,7 +6,7 @@ import Image from "next/image";
 import { gsap, useGSAP, SplitText, MOTION_OK, REDUCED } from "@/lib/gsap";
 import type { HeroData } from "@/types";
 
-const HeroParticles = dynamic(() => import("@/components/three/HeroParticles"), {
+const HeroSpace = dynamic(() => import("@/components/three/HeroSpace"), {
   ssr: false,
 });
 
@@ -84,7 +84,7 @@ export default function Hero({ data }: HeroProps) {
           Boolean
         ) as HTMLElement[];
         const split = SplitText.create(nameTargets, {
-          type: "chars",
+          type: "chars, words",
           mask: "chars",
         });
 
@@ -241,10 +241,8 @@ export default function Hero({ data }: HeroProps) {
         }}
       />
 
-      <div className="absolute top-1/4 left-1/4 -z-10 w-96 h-96 rounded-full bg-accent/5 blur-3xl" />
-
       <div ref={particlesRef} className="absolute inset-0 -z-10">
-        <HeroParticles />
+        <HeroSpace />
       </div>
 
       <div className="w-full max-w-6xl px-6 flex items-center gap-16 pt-24 pb-24">

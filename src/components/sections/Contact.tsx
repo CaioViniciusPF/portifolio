@@ -1,9 +1,14 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import dynamic from "next/dynamic";
+import { gsap, useGSAP, SplitText, MOTION_OK, REDUCED } from "@/lib/gsap";
 import type { ContactData } from "@/types";
 import ContactForm from "./ContactForm";
+
+const MorphShape = dynamic(() => import("@/components/three/MorphShape"), {
+  ssr: false,
+});
 
 interface ContactProps {
   data: ContactData;
@@ -11,7 +16,7 @@ interface ContactProps {
 
 const links = (data: ContactData) => [
   {
-    label: "Email",
+    label: data.emailLabel,
     value: data.email,
     href: `mailto:${data.email}`,
     icon: (
@@ -55,32 +60,54 @@ const links = (data: ContactData) => [
 
 export default function Contact({ data }: ContactProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const descRef = useRef<HTMLParagraphElement>(null);
   const cardsRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      gsap.from(headingRef.current, {
-        y: 40,
-        opacity: 0,
-        duration: 0.7,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top 85%",
-        },
+      const mm = gsap.matchMedia();
+
+      mm.add(REDUCED, () => {
+        gsap.set(cardsRef.current!.children, { opacity: 1, y: 0 });
       });
 
-      gsap.from(cardsRef.current!.children, {
-        y: 30,
-        opacity: 0,
-        duration: 0.5,
-        ease: "power2.out",
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: cardsRef.current,
-          start: "top 85%",
-        },
+      mm.add(MOTION_OK, () => {
+        const split = SplitText.create(headingRef.current, {
+          type: "chars, words",
+          mask: "chars",
+        });
+        const tl = gsap.timeline({
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+            once: true,
+          },
+        });
+
+        tl.from(split.chars, {
+          yPercent: 110,
+          duration: 0.9,
+          ease: "power4.out",
+          stagger: 0.02,
+        });
+        tl.from(
+          descRef.current,
+          { y: 20, opacity: 0, duration: 0.6 },
+          "-=0.4"
+        );
+
+        gsap.from(cardsRef.current!.children, {
+          y: 30,
+          opacity: 0,
+          duration: 0.5,
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: cardsRef.current,
+            start: "top 85%",
+            once: true,
+          },
+        });
       });
     },
     { scope: sectionRef }
@@ -92,70 +119,81 @@ export default function Contact({ data }: ContactProps) {
     <section
       ref={sectionRef}
       id="contact"
-      className="py-24 px-6 border-t border-border"
+      className="relative isolate overflow-x-clip py-24 md:py-32 px-6"
     >
+      <div
+        aria-hidden
+        className="absolute -z-10 pointer-events-none bottom-0 -left-40 w-[36rem] h-[36rem] opacity-10 bg-[radial-gradient(closest-side,var(--color-accent),transparent_72%)]"
+      />
       <div className="max-w-6xl mx-auto">
-        <div ref={headingRef} className="mb-14">
-          <p className="font-mono text-accent text-sm tracking-widest uppercase mb-2">
-            05. {data.eyebrow}
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-text-main">
-            {data.title}
+        <div className="mb-12 md:mb-16 max-w-3xl">
+          <h2
+            ref={headingRef}
+            className="font-display font-bold text-text-main text-5xl md:text-7xl tracking-[-0.02em] mb-5"
+          >
+            {data.ctaHeadline}
           </h2>
-          <p className="text-text-muted text-lg mt-4 max-w-xl">
+          <p ref={descRef} className="text-text-muted text-lg md:text-xl">
             {data.description}
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12 items-start">
+        <div className="grid lg:grid-cols-2 gap-12">
           <ContactForm content={data.form} />
 
-          <div ref={cardsRef} className="grid sm:grid-cols-2 gap-4 h-fit">
-            {contactLinks.map((link) =>
-              link.href ? (
-                <a
-                  key={link.label}
-                  href={link.href}
-                  target={link.href.startsWith("http") ? "_blank" : undefined}
-                  rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                  className="relative flex flex-col gap-3 p-5 bg-surface border border-border rounded-lg hover:border-accent hover:text-accent transition-colors duration-200 group"
-                >
-                  {link.href.startsWith("http") && (
-                    <svg
-                      className="absolute top-4 right-4 w-3.5 h-3.5 text-text-muted group-hover:text-accent transition-colors duration-200"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                    </svg>
-                  )}
-                  <span className="text-text-muted group-hover:text-accent transition-colors duration-200">
-                    {link.icon}
-                  </span>
-                  <div>
-                    <p className="font-mono text-xs text-text-muted tracking-widest uppercase mb-0.5">
-                      {link.label}
-                    </p>
-                    <p className="text-text-main text-sm font-medium break-all">{link.value}</p>
-                  </div>
-                </a>
-              ) : (
-                <div
-                  key={link.label}
-                  className="flex flex-col gap-3 p-5 bg-surface border border-border rounded-lg"
-                >
-                  <span className="text-text-muted">{link.icon}</span>
-                  <div>
-                    <p className="font-mono text-xs text-text-muted tracking-widest uppercase mb-0.5">
-                      {link.label}
-                    </p>
-                    <p className="text-text-main text-sm font-medium">{link.value}</p>
-                  </div>
-                </div>
-              )
-            )}
+          <div aria-hidden className="hidden lg:block relative">
+            <MorphShape />
           </div>
+        </div>
+
+        <div
+          ref={cardsRef}
+          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-12"
+        >
+          {contactLinks.map((link) =>
+            link.href ? (
+              <a
+                key={link.label}
+                href={link.href}
+                target={link.href.startsWith("http") ? "_blank" : undefined}
+                rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                className="relative flex flex-col gap-3 p-5 bg-surface border border-border rounded-lg hover:border-accent hover:text-accent transition-colors duration-200 group"
+              >
+                {link.href.startsWith("http") && (
+                  <svg
+                    className="absolute top-4 right-4 w-3.5 h-3.5 text-text-muted group-hover:text-accent transition-colors duration-200"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                  </svg>
+                )}
+                <span className="text-text-muted group-hover:text-accent transition-colors duration-200">
+                  {link.icon}
+                </span>
+                <div>
+                  <p className="font-mono text-xs text-text-muted tracking-widest uppercase mb-0.5">
+                    {link.label}
+                  </p>
+                  <p className="text-text-main text-sm font-medium break-all">{link.value}</p>
+                </div>
+              </a>
+            ) : (
+              <div
+                key={link.label}
+                className="flex flex-col gap-3 p-5 bg-surface border border-border rounded-lg"
+              >
+                <span className="text-text-muted">{link.icon}</span>
+                <div>
+                  <p className="font-mono text-xs text-text-muted tracking-widest uppercase mb-0.5">
+                    {link.label}
+                  </p>
+                  <p className="text-text-main text-sm font-medium">{link.value}</p>
+                </div>
+              </div>
+            )
+          )}
         </div>
       </div>
     </section>

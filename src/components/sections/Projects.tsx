@@ -20,7 +20,7 @@ export default function Projects({ data }: ProjectsProps) {
 
       mm.add(MOTION_OK, () => {
         const split = SplitText.create(headingRef.current, {
-          type: "chars",
+          type: "chars, words",
           mask: "chars",
         });
         gsap.from(split.chars, {
@@ -119,33 +119,30 @@ export default function Projects({ data }: ProjectsProps) {
     <section
       ref={sectionRef}
       id="projects"
-      className="border-t border-border md:overflow-hidden"
+      className="md:h-screen md:flex md:flex-col md:overflow-hidden motion-reduce:!h-auto motion-reduce:!overflow-visible"
     >
+      <div className="w-full max-w-6xl mx-auto px-6 pt-32 md:pt-36">
+        <h2
+          ref={headingRef}
+          className="font-display font-bold text-text-main text-5xl md:text-7xl tracking-[-0.02em]"
+        >
+          {data.title}
+        </h2>
+      </div>
+
       <div
         ref={trackRef}
-        className="flex flex-col md:flex-row md:h-screen md:w-max divide-y md:divide-y-0 md:divide-x divide-border"
+        className="flex flex-col md:flex-row md:items-center md:flex-1 md:min-h-0 md:w-max md:pl-[10vw] motion-reduce:!flex-col motion-reduce:!w-auto motion-reduce:!pl-0"
       >
-        <div className="px-6 pt-24 pb-14 md:py-0 md:w-[38vw] md:flex-shrink-0 md:flex md:flex-col md:justify-center md:gap-8 md:px-[5vw]">
-          <h2
-            ref={headingRef}
-            className="font-display font-bold text-text-main text-5xl md:text-7xl tracking-[-0.02em]"
-          >
-            {data.title}
-          </h2>
-          <p className="hidden md:block font-mono text-sm text-text-muted tracking-widest">
-            {data.scrollHint}
-          </p>
-        </div>
-
         {data.items.map((item, i) => (
           <article
             key={item.title}
             data-row
-            className="group flex flex-col gap-8 px-6 py-14 md:py-0 md:px-[4vw] md:w-[76vw] md:flex-shrink-0 md:justify-center md:gap-10"
+            className="group grid grid-cols-1 md:grid-cols-12 items-center gap-8 md:gap-[3vw] px-6 py-14 md:py-0 md:px-[5vw] md:w-[80vw] md:flex-shrink-0 motion-reduce:!grid-cols-1 motion-reduce:!w-auto"
           >
             <div
               data-media
-              className="relative overflow-hidden bg-surface aspect-[16/10] md:aspect-auto md:h-[52vh]"
+              className="relative w-full overflow-hidden bg-surface aspect-[16/10] md:col-span-7"
             >
               {item.image ? (
                 <div data-parallax className="absolute inset-0 scale-110">
@@ -168,25 +165,24 @@ export default function Projects({ data }: ProjectsProps) {
               )}
             </div>
 
-            <div
-              data-meta
-              className="flex flex-col gap-4 md:grid md:grid-cols-12 md:gap-6 md:items-start"
-            >
-              <div className="flex flex-col gap-3 md:col-span-5">
-                <span className="font-mono text-sm text-text-muted transition-colors duration-300 group-hover:text-accent">
-                  {String(i + 1).padStart(2, "0")}
-                </span>
+            <div data-meta className="relative md:col-span-5">
+              <span
+                aria-hidden
+                className="pointer-events-none select-none absolute -top-6 -left-3 md:-top-36 md:-left-8 font-display font-bold leading-none text-[6rem] md:text-[13rem] text-text-main opacity-[0.08]"
+              >
+                {String(i + 1).padStart(2, "0")}
+              </span>
+
+              <div className="relative flex flex-col gap-4">
+                <p className="flex items-center gap-3 font-mono text-xs text-accent/70 tracking-widest uppercase">
+                  <span className="h-px w-8 bg-accent/70" />
+                  {item.context}
+                </p>
                 <h3 className="font-display font-bold text-text-main text-4xl md:text-5xl tracking-[-0.02em]">
                   <span className="inline-block transition-transform duration-300 ease-out-expo group-hover:translate-x-2">
                     {item.title}
                   </span>
                 </h3>
-                <p className="font-mono text-xs text-accent/70 tracking-widest uppercase">
-                  {item.context}
-                </p>
-              </div>
-
-              <div className="flex flex-col gap-4 md:col-span-7">
                 <p className="text-text-muted leading-relaxed max-w-[45ch]">
                   {item.description}
                 </p>

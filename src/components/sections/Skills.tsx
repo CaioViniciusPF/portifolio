@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP, SplitText, MOTION_OK, REDUCED } from "@/lib/gsap";
 import type { SkillsData } from "@/types";
 
 interface SkillsProps {
@@ -10,33 +10,52 @@ interface SkillsProps {
 
 export default function Skills({ data }: SkillsProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
   const groupsRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      gsap.from(headingRef.current, {
-        y: 40,
-        opacity: 0,
-        duration: 0.7,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top 85%",
-        },
+      const mm = gsap.matchMedia();
+
+      mm.add(REDUCED, () => {
+        gsap.set(groupsRef.current!.querySelectorAll("[data-group]"), {
+          opacity: 1,
+          y: 0,
+        });
       });
 
-      const allTags = groupsRef.current!.querySelectorAll("[data-skill]");
-      gsap.from(allTags, {
-        y: 20,
-        opacity: 0,
-        duration: 0.4,
-        ease: "power2.out",
-        stagger: 0.04,
-        scrollTrigger: {
-          trigger: groupsRef.current,
-          start: "top 80%",
-        },
+      mm.add(MOTION_OK, () => {
+        const split = SplitText.create(headingRef.current, {
+          type: "chars, words",
+          mask: "chars",
+        });
+        gsap.from(split.chars, {
+          yPercent: 110,
+          duration: 0.8,
+          ease: "power4.out",
+          stagger: 0.03,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+            once: true,
+          },
+        });
+
+        gsap.utils.toArray<HTMLElement>("[data-group]").forEach((group) => {
+          gsap.from(group, {
+            y: 30,
+            opacity: 0,
+            duration: 0.6,
+            scrollTrigger: { trigger: group, start: "top 85%", once: true },
+          });
+
+          gsap.from(group.querySelectorAll("[data-skill]"), {
+            opacity: 0,
+            duration: 0.4,
+            stagger: 0.03,
+            scrollTrigger: { trigger: group, start: "top 80%", once: true },
+          });
+        });
       });
     },
     { scope: sectionRef }
@@ -46,32 +65,43 @@ export default function Skills({ data }: SkillsProps) {
     <section
       ref={sectionRef}
       id="skills"
-      className="py-24 px-6 border-t border-border"
+      className="relative isolate overflow-x-clip py-32 md:py-40 px-6"
     >
+      <div
+        aria-hidden
+        className="absolute -z-10 pointer-events-none top-1/4 -right-48 w-[38rem] h-[38rem] opacity-[0.09] bg-[radial-gradient(closest-side,var(--color-accent),transparent_72%)]"
+      />
+      <div
+        aria-hidden
+        className="absolute -z-10 pointer-events-none bottom-0 -left-40 w-[30rem] h-[30rem] opacity-[0.07] bg-[radial-gradient(closest-side,var(--color-primary),transparent_72%)]"
+      />
       <div className="max-w-6xl mx-auto">
-        <div ref={headingRef} className="mb-14">
-          <p className="font-mono text-accent text-sm tracking-widest uppercase mb-2">
-            02. {data.eyebrow}
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-text-main">
-            {data.title}
-          </h2>
-        </div>
+        <h2
+          ref={headingRef}
+          className="font-display font-bold text-text-main text-5xl md:text-7xl tracking-[-0.02em] mb-16 md:mb-20"
+        >
+          {data.title}
+        </h2>
 
-        <div ref={groupsRef} className="flex flex-col gap-10">
+        <div ref={groupsRef} className="flex flex-col">
           {data.groups.map((group) => (
-            <div key={group.category}>
-              <p className="font-mono text-text-muted text-sm tracking-widest uppercase mb-4">
+            <div
+              key={group.category}
+              data-group
+              className="flex flex-col md:flex-row md:items-baseline gap-3 md:gap-8 py-8 border-b border-border"
+            >
+              <h3 className="font-display font-bold text-2xl md:text-4xl text-text-main md:w-64 md:flex-shrink-0">
                 {group.category}
-              </p>
-              <div className="flex flex-wrap gap-2">
-                {group.skills.map((skill) => (
+              </h3>
+              <div className="flex flex-wrap gap-x-3 gap-y-2">
+                {group.skills.map((skill, i) => (
                   <span
                     key={skill}
                     data-skill
-                    className="font-mono text-sm px-4 py-2 rounded border border-border text-text-main bg-surface hover:border-accent hover:text-accent transition-colors duration-200"
+                    className="font-mono text-base md:text-lg text-text-muted hover:text-accent transition-colors duration-200"
                   >
                     {skill}
+                    {i < group.skills.length - 1 ? " /" : ""}
                   </span>
                 ))}
               </div>

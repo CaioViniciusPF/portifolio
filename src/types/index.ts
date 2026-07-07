@@ -77,8 +77,10 @@ export interface ContactFormContent {
 export interface ContactData {
   eyebrow: string;
   title: string;
+  ctaHeadline: string;
   description: string;
   email: string;
+  emailLabel: string;
   github: string;
   linkedin: string;
   location: string;
@@ -100,7 +102,6 @@ export interface ProjectsData {
   eyebrow: string;
   title: string;
   viewSiteLabel: string;
-  scrollHint: string;
   items: ProjectItem[];
 }
 

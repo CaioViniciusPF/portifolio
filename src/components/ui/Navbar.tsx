@@ -2,7 +2,8 @@
 
 import { useRef, useEffect, useState } from "react";
 import { useTheme } from "next-themes";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { useLenis } from "lenis/react";
+import { gsap, useGSAP, REDUCED } from "@/lib/gsap";
 import type { NavLink } from "@/types";
 import { useLanguage } from "./LanguageProvider";
 
@@ -142,10 +143,13 @@ interface NavbarProps {
 
 export default function Navbar({ links, resumeLabel }: NavbarProps) {
   const navRef = useRef<HTMLElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const [scrolled, setScrolled] = useState(
     () => typeof window !== "undefined" && window.scrollY > 40
   );
   const [menuOpen, setMenuOpen] = useState(false);
+  const [activeHref, setActiveHref] = useState<string | null>(null);
+  const lenis = useLenis();
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 40);
@@ -154,15 +158,39 @@ export default function Navbar({ links, resumeLabel }: NavbarProps) {
   }, []);
 
   useEffect(() => {
-    if (menuOpen) {
-      document.body.style.overflow = "hidden";
-    } else {
-      document.body.style.overflow = "";
+    const sections = links
+      .map((link) => document.querySelector<HTMLElement>(link.href))
+      .filter((el): el is HTMLElement => !!el);
+    if (!sections.length) return;
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setActiveHref(`#${entry.target.id}`);
+          }
+        });
+      },
+      { rootMargin: "-45% 0px -45% 0px" }
+    );
+
+    sections.forEach((el) => observer.observe(el));
+    return () => observer.disconnect();
+  }, [links]);
+
+  useEffect(() => {
+    if (lenis) {
+      if (menuOpen) lenis.stop();
+      else lenis.start();
+      return () => lenis.start();
     }
+
+    if (menuOpen) document.body.style.overflow = "hidden";
+    else document.body.style.overflow = "";
     return () => {
       document.body.style.overflow = "";
     };
-  }, [menuOpen]);
+  }, [menuOpen, lenis]);
 
   useGSAP(
     () => {
@@ -175,8 +203,13 @@ export default function Navbar({ links, resumeLabel }: NavbarProps) {
 
   useEffect(() => {
     if (hasAnimated) return;
+    const reduced = window.matchMedia(REDUCED).matches;
     const onReady = () => {
       hasAnimated = true;
+      if (reduced) {
+        gsap.set(navRef.current, { y: 0, opacity: 1 });
+        return;
+      }
       gsap.to(navRef.current, {
         y: 0,
         opacity: 1,
@@ -187,6 +220,36 @@ export default function Navbar({ links, resumeLabel }: NavbarProps) {
     window.addEventListener("hero:ready", onReady);
     return () => window.removeEventListener("hero:ready", onReady);
   }, []);
+
+  useGSAP(
+    () => {
+      if (!menuOpen || !overlayRef.current) return;
+
+      if (window.matchMedia(REDUCED).matches) {
+        gsap.set(overlayRef.current, { opacity: 1 });
+        gsap.set(overlayRef.current.querySelectorAll("[data-mobile-link]"), {
+          opacity: 1,
+          y: 0,
+        });
+        return;
+      }
+
+      gsap.fromTo(
+        overlayRef.current,
+        { opacity: 0 },
+        { opacity: 1, duration: 0.35, ease: "power2.out" }
+      );
+      gsap.from(overlayRef.current.querySelectorAll("[data-mobile-link]"), {
+        y: 24,
+        opacity: 0,
+        duration: 0.4,
+        stagger: 0.06,
+        delay: 0.15,
+        ease: "power2.out",
+      });
+    },
+    { dependencies: [menuOpen] }
+  );
 
   const closeMenu = () => setMenuOpen(false);
 
@@ -211,20 +274,29 @@ export default function Navbar({ links, resumeLabel }: NavbarProps) {
           </a>
 
           <ul className="hidden lg:flex items-center gap-8">
-            {links.map((link, i) => (
-              <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="font-mono text-sm text-text-muted hover:text-accent transition-colors duration-200 relative group"
-                >
-                  <span className="text-accent/60 mr-1 text-xs">
-                    {String(i + 1).padStart(2, "0")}.
-                  </span>
-                  {link.label}
-                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-accent transition-all duration-300 group-hover:w-full" />
-                </a>
-              </li>
-            ))}
+            {links.map((link, i) => {
+              const isActive = activeHref === link.href;
+              return (
+                <li key={link.href}>
+                  <a
+                    href={link.href}
+                    className={`font-mono text-sm transition-colors duration-200 relative group ${
+                      isActive ? "text-accent" : "text-text-muted hover:text-accent"
+                    }`}
+                  >
+                    <span className="text-accent/60 mr-1 text-xs">
+                      {String(i + 1).padStart(2, "0")}.
+                    </span>
+                    {link.label}
+                    <span
+                      className={`absolute -bottom-0.5 left-0 h-px bg-accent transition-all duration-300 ${
+                        isActive ? "w-full" : "w-0 group-hover:w-full"
+                      }`}
+                    />
+                  </a>
+                </li>
+              );
+            })}
           </ul>
 
           <CurriculoButton label={resumeLabel} className="hidden lg:inline-flex px-4 py-2" />
@@ -259,12 +331,17 @@ export default function Navbar({ links, resumeLabel }: NavbarProps) {
       </nav>
 
       {menuOpen && (
-        <div className="lg:hidden fixed inset-0 z-40 bg-background/95 backdrop-blur-md flex flex-col items-center justify-center gap-8">
+        <div
+          ref={overlayRef}
+          data-lenis-prevent
+          className="lg:hidden fixed inset-0 z-40 bg-background flex flex-col items-center justify-center gap-8"
+        >
           {links.map((link, i) => (
             <a
               key={link.href}
               href={link.href}
               onClick={closeMenu}
+              data-mobile-link
               className="font-mono text-2xl text-text-muted hover:text-accent transition-colors duration-200"
             >
               <span className="text-accent/60 mr-2 text-base">

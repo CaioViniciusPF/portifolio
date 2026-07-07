@@ -65,7 +65,6 @@ export const siteData: SiteData = {
     eyebrow: "projetos",
     title: "Projetos",
     viewSiteLabel: "Ver site",
-    scrollHint: "( role para o lado )",
     items: [
       {
         title: "WiseControl",
@@ -138,8 +137,10 @@ export const siteData: SiteData = {
   contact: {
     eyebrow: "contato",
     title: "Contato",
+    ctaHeadline: "Vamos conversar.",
     description: "Aberto a oportunidades, colaborações e conversas. Pode mandar mensagem.",
     email: "freirescaiovini@gmail.com",
+    emailLabel: "Email",
     github: "github.com/CaioViniciusPF",
     linkedin: "linkedin.com/in/caiovinicius",
     location: "Fortaleza, CE",

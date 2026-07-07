@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useState, type FormEvent } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP, MOTION_OK, REDUCED } from "@/lib/gsap";
 import type { ContactFormContent } from "@/types";
 
 interface ContactFormProps {
@@ -20,16 +20,25 @@ export default function ContactForm({ content }: ContactFormProps) {
 
   useGSAP(
     () => {
-      gsap.from(formRef.current!.children, {
-        y: 30,
-        opacity: 0,
-        duration: 0.5,
-        ease: "power2.out",
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: formRef.current,
-          start: "top 85%",
-        },
+      const mm = gsap.matchMedia();
+
+      mm.add(REDUCED, () => {
+        gsap.set(formRef.current!.children, { opacity: 1, y: 0 });
+      });
+
+      mm.add(MOTION_OK, () => {
+        gsap.from(formRef.current!.children, {
+          y: 30,
+          opacity: 0,
+          duration: 0.5,
+          ease: "power2.out",
+          stagger: 0.1,
+          scrollTrigger: {
+            trigger: formRef.current,
+            start: "top 85%",
+            once: true,
+          },
+        });
       });
     },
     { scope: formRef }

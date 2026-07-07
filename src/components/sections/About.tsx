@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP, SplitText, MOTION_OK, DESKTOP, REDUCED } from "@/lib/gsap";
 import type { AboutData } from "@/types";
 
 interface AboutProps {
@@ -10,45 +10,84 @@ interface AboutProps {
 
 export default function About({ data }: AboutProps) {
   const sectionRef = useRef<HTMLElement>(null);
-  const headingRef = useRef<HTMLDivElement>(null);
-  const contentRef = useRef<HTMLDivElement>(null);
-  const highlightsRef = useRef<HTMLDivElement>(null);
+  const headingRef = useRef<HTMLHeadingElement>(null);
+  const paragraphsRef = useRef<HTMLDivElement>(null);
+  const statsRef = useRef<HTMLDivElement>(null);
 
   useGSAP(
     () => {
-      gsap.from(headingRef.current, {
-        y: 40,
-        opacity: 0,
-        duration: 0.7,
-        ease: "power2.out",
-        scrollTrigger: {
-          trigger: headingRef.current,
-          start: "top 85%",
-        },
+      const mm = gsap.matchMedia();
+
+      mm.add(REDUCED, () => {
+        gsap.set(statsRef.current!.children, { opacity: 1, y: 0 });
       });
 
-      gsap.from(contentRef.current, {
-        y: 40,
-        opacity: 0,
-        duration: 0.7,
-        ease: "power2.out",
-        delay: 0.15,
-        scrollTrigger: {
-          trigger: contentRef.current,
-          start: "top 85%",
-        },
+      mm.add(MOTION_OK, () => {
+        const split = SplitText.create(headingRef.current, {
+          type: "chars, words",
+          mask: "chars",
+        });
+        gsap.from(split.chars, {
+          yPercent: 110,
+          duration: 0.8,
+          ease: "power4.out",
+          stagger: 0.03,
+          scrollTrigger: {
+            trigger: sectionRef.current,
+            start: "top 75%",
+            once: true,
+          },
+        });
+
+        gsap.from(statsRef.current!.children, {
+          y: 20,
+          opacity: 0,
+          duration: 0.6,
+          stagger: 0.08,
+          scrollTrigger: {
+            trigger: statsRef.current,
+            start: "top 85%",
+            once: true,
+          },
+        });
       });
 
-      gsap.from(highlightsRef.current!.children, {
-        y: 30,
-        opacity: 0,
-        duration: 0.5,
-        ease: "power2.out",
-        stagger: 0.1,
-        scrollTrigger: {
-          trigger: highlightsRef.current,
-          start: "top 85%",
-        },
+      mm.add(`${MOTION_OK} and ${DESKTOP}`, () => {
+        const lineSplit = SplitText.create(
+          paragraphsRef.current!.querySelectorAll("p"),
+          { type: "lines", mask: "lines" }
+        );
+
+        lineSplit.lines.forEach((line) => {
+          gsap.fromTo(
+            line,
+            { opacity: 0.15 },
+            {
+              opacity: 1,
+              ease: "none",
+              scrollTrigger: {
+                trigger: line,
+                start: "top 85%",
+                end: "top 55%",
+                scrub: true,
+              },
+            }
+          );
+        });
+      });
+
+      mm.add(`${MOTION_OK} and (max-width: 767px)`, () => {
+        gsap.from(paragraphsRef.current!.children, {
+          y: 24,
+          opacity: 0,
+          duration: 0.6,
+          stagger: 0.12,
+          scrollTrigger: {
+            trigger: paragraphsRef.current,
+            start: "top 85%",
+            once: true,
+          },
+        });
       });
     },
     { scope: sectionRef }
@@ -58,40 +97,53 @@ export default function About({ data }: AboutProps) {
     <section
       ref={sectionRef}
       id="about"
-      className="py-24 px-6 border-t border-border"
+      className="relative isolate py-32 md:py-40 px-6"
     >
-      <div className="max-w-6xl mx-auto">
-        <div ref={headingRef} className="mb-14">
-          <p className="font-mono text-accent text-sm tracking-widest uppercase mb-2">
-            01. {data.eyebrow}
-          </p>
-          <h2 className="text-4xl md:text-5xl font-bold text-text-main">
+      <div
+        aria-hidden
+        className="absolute -z-10 pointer-events-none top-24 -left-56 w-[36rem] h-[36rem] opacity-10 bg-[radial-gradient(closest-side,var(--color-accent),transparent_72%)]"
+      />
+      <div
+        aria-hidden
+        className="absolute -z-10 pointer-events-none bottom-10 right-0 w-[28rem] h-[28rem] opacity-[0.08] bg-[radial-gradient(closest-side,var(--color-primary),transparent_72%)]"
+      />
+      <div className="max-w-6xl mx-auto grid lg:grid-cols-12 gap-12">
+        <div className="lg:col-span-4">
+          <h2
+            ref={headingRef}
+            className="font-display font-bold text-text-main text-5xl md:text-6xl tracking-[-0.02em] lg:sticky lg:top-32"
+          >
             {data.title}
           </h2>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          <div ref={contentRef} className="flex flex-col gap-4">
+        <div className="lg:col-span-8 flex flex-col gap-16">
+          <div ref={paragraphsRef} className="flex flex-col gap-6">
             {data.paragraphs.map((p, i) => (
-              <p key={i} className="text-text-muted leading-relaxed text-lg">
+              <p
+                key={i}
+                className="text-text-muted leading-relaxed text-lg md:text-xl max-w-[60ch]"
+              >
                 {p}
               </p>
             ))}
           </div>
 
           <div
-            ref={highlightsRef}
-            className="grid grid-cols-2 gap-4 h-fit"
+            ref={statsRef}
+            className="grid grid-cols-2 md:grid-cols-4 border-y border-border"
           >
             {data.highlights.map((h) => (
               <div
                 key={h.label}
-                className="bg-surface border border-border rounded-lg p-5"
+                className="flex flex-col gap-1 min-w-0 px-4 py-6 border-border even:border-l md:border-l md:first:border-l-0 md:first:pl-0 [&:nth-child(-n+2)]:border-b md:[&:nth-child(-n+2)]:border-b-0"
               >
-                <p className="font-mono text-accent text-xs tracking-widest uppercase mb-1">
+                <p className="font-display font-bold text-text-main text-xl md:text-2xl break-words">
+                  {h.value}
+                </p>
+                <p className="font-mono text-text-muted text-xs tracking-widest uppercase">
                   {h.label}
                 </p>
-                <p className="text-text-main font-semibold">{h.value}</p>
               </div>
             ))}
           </div>
