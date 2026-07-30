@@ -1,7 +1,14 @@
 "use client";
 
 import { useRef } from "react";
-import { gsap, useGSAP, SplitText, MOTION_OK, REDUCED } from "@/lib/gsap";
+import {
+  gsap,
+  useGSAP,
+  ScrollTrigger,
+  SplitText,
+  MOTION_OK,
+  REDUCED,
+} from "@/lib/gsap";
 import type { ExperienceData, EducationItem } from "@/types";
 
 interface ExperienceProps {
@@ -18,14 +25,33 @@ export default function Experience({ data, education }: ExperienceProps) {
 
   useGSAP(
     () => {
+      const timeline = timelineRef.current!;
+      const progress = progressRef.current!;
+
+      const syncRail = () => {
+        const h = timeline.offsetHeight;
+        if (h) progress.setAttribute("d", `M2,0 L2,${h}`);
+      };
+
+      syncRail();
+      ScrollTrigger.addEventListener("refreshInit", syncRail);
+
+      let firstResize = true;
+      const ro = new ResizeObserver(() => {
+        if (firstResize) {
+          firstResize = false;
+          return;
+        }
+        ScrollTrigger.refresh();
+      });
+      ro.observe(timeline);
+
       const mm = gsap.matchMedia();
 
       mm.add(REDUCED, () => {
-        gsap.set(progressRef.current, { drawSVG: "100%" });
-        gsap.set(timelineRef.current!.querySelectorAll("[data-dot]"), {
-          scale: 1,
-        });
-        gsap.set(educationRef.current, { opacity: 1, y: 0 });
+        gsap.set(progress, { drawSVG: "100%" });
+        gsap.set(timeline.querySelectorAll("[data-dot]"), { scale: 1 });
+        gsap.set(educationRef.current, { autoAlpha: 1, y: 0 });
       });
 
       mm.add(MOTION_OK, () => {
@@ -45,56 +71,65 @@ export default function Experience({ data, education }: ExperienceProps) {
           },
         });
 
-        gsap.set(progressRef.current, { drawSVG: "0%" });
-        gsap.to(progressRef.current, {
-          drawSVG: "100%",
-          ease: "none",
-          scrollTrigger: {
-            trigger: timelineRef.current,
-            start: "top 70%",
-            end: "bottom 70%",
-            scrub: true,
-          },
-        });
+        gsap.fromTo(
+          progress,
+          { drawSVG: "0%" },
+          {
+            drawSVG: "100%",
+            ease: "none",
+            scrollTrigger: {
+              trigger: timeline,
+              start: "top 70%",
+              end: "bottom 70%",
+              scrub: 0.5,
+              invalidateOnRefresh: true,
+            },
+          }
+        );
 
-        gsap.utils.toArray<HTMLElement>("[data-item]").forEach((item) => {
-          const dot = item.querySelector("[data-dot]");
-          const period = item.querySelector("[data-period]");
+        gsap.utils
+          .toArray<HTMLElement>("[data-item]", timeline)
+          .forEach((item) => {
+            const dot = item.querySelector("[data-dot]");
+            const period = item.querySelector<HTMLElement>("[data-period]");
+            const periodText = period?.textContent ?? "";
 
-          gsap.from(item, {
-            y: 30,
-            opacity: 0,
-            duration: 0.6,
-            scrollTrigger: { trigger: item, start: "top 80%", once: true },
+            const tl = gsap.timeline({
+              scrollTrigger: { trigger: item, start: "top 80%", once: true },
+            });
+
+            tl.from(item, {
+              y: 24,
+              autoAlpha: 0,
+              duration: 0.7,
+              ease: "power3.out",
+            }).fromTo(
+              dot,
+              { scale: 0 },
+              { scale: 1, duration: 0.55, ease: "back.out(3)" },
+              0.15
+            );
+
+            if (period) {
+              tl.to(
+                period,
+                {
+                  duration: 0.9,
+                  ease: "none",
+                  scrambleText: {
+                    text: periodText,
+                    chars: "0123456789",
+                    speed: 0.4,
+                  },
+                },
+                0
+              );
+            }
           });
 
-          gsap.fromTo(
-            dot,
-            { scale: 0 },
-            {
-              scale: 1,
-              duration: 0.5,
-              ease: "back.out(3)",
-              scrollTrigger: { trigger: item, start: "top 75%", once: true },
-            }
-          );
-
-          if (period) {
-            gsap.to(period, {
-              duration: 0.8,
-              scrambleText: {
-                text: period.textContent ?? "",
-                chars: "0123456789",
-                speed: 0.4,
-              },
-              scrollTrigger: { trigger: item, start: "top 75%", once: true },
-            });
-          }
-        });
-
         gsap.from(educationRef.current, {
-          y: 30,
-          opacity: 0,
+          y: 24,
+          autoAlpha: 0,
           duration: 0.6,
           scrollTrigger: {
             trigger: educationRef.current,
@@ -103,6 +138,11 @@ export default function Experience({ data, education }: ExperienceProps) {
           },
         });
       });
+
+      return () => {
+        ScrollTrigger.removeEventListener("refreshInit", syncRail);
+        ro.disconnect();
+      };
     },
     { scope: sectionRef }
   );
@@ -130,40 +170,28 @@ export default function Experience({ data, education }: ExperienceProps) {
         </h2>
 
         <div ref={timelineRef} className="relative flex flex-col gap-0">
-          <svg
-            className="absolute left-0 top-0 w-1 h-full -z-10"
-            viewBox="0 0 4 100"
-            preserveAspectRatio="none"
+          <div
             aria-hidden
+            className="pointer-events-none absolute left-[1.5px] top-0 w-px h-full bg-border"
+          />
+          <svg
+            aria-hidden
+            className="pointer-events-none absolute left-0 top-0 w-1 h-full"
           >
-            <line
-              x1="2"
-              y1="0"
-              x2="2"
-              y2="100"
-              className="stroke-border"
-              strokeWidth={1}
-              vectorEffect="non-scaling-stroke"
-            />
             <path
               ref={progressRef}
-              d="M2,0 L2,100"
+              d="M2,0 L2,0"
               fill="none"
               className="stroke-accent"
               strokeWidth={2}
-              vectorEffect="non-scaling-stroke"
             />
           </svg>
 
           {data.items.map((item, i) => (
-            <div
-              key={i}
-              data-item
-              className="relative pl-8 pb-12 last:pb-0"
-            >
+            <div key={i} data-item className="relative pl-8 pb-12 last:pb-0">
               <span
                 data-dot
-                className="absolute -left-[5px] top-1 w-2.5 h-2.5 rounded-full bg-accent scale-0"
+                className="absolute -left-[3px] top-1 w-2.5 h-2.5 rounded-full bg-accent scale-0"
               />
 
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-1 mb-1">
@@ -211,7 +239,9 @@ export default function Experience({ data, education }: ExperienceProps) {
             >
               <div>
                 <h3 className="text-lg font-bold text-text-main">{e.degree}</h3>
-                <p className="font-mono text-text-muted text-sm">{e.institution}</p>
+                <p className="font-mono text-text-muted text-sm">
+                  {e.institution}
+                </p>
               </div>
               <span className="font-mono text-accent text-sm">{e.period}</span>
             </div>

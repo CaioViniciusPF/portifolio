@@ -7,7 +7,7 @@ export const siteData: SiteData = {
     roles: [
       "Sou desenvolvedor web e estudante de engenharia da computação na UFC - Universidade Federal do Ceará.",
     ],
-    bio: "Desenvolvedor Front-end com experiência em React, Next.js e TypeScript. Atualmente bolsista na Altlab/UFC. Apaixonado por interfaces e animações fluidas.",
+    bio: "Desenvolvedor Front-end com experiência em React, Next.js e TypeScript. Passagem pela Altlab/UFC e pela Empresa Júnior GTI. Apaixonado por interfaces e animações fluidas.",
     photo: "/images/hero.jpeg",
     scrollLabel: "scroll",
     cta: {
@@ -31,7 +31,7 @@ export const siteData: SiteData = {
     title: "Sobre mim",
     paragraphs: [
       "Desenvolvedor Front-end com experiência prática em React, Next.js, TypeScript e Tailwind CSS, com foco em interfaces responsivas e consumo de APIs REST.",
-      "Atualmente bolsista no laboratório Altlab da UFC, onde desenvolvo o sistema WiseControl — integrando front-end e back-end com Next.js, React e MUI. Antes disso, atuei como Diretor de Projetos na Empresa Júnior GTI, liderando equipe e entregando aplicações para clientes reais.",
+      "Fui bolsista no laboratório Altlab da UFC, onde desenvolvi o sistema WiseControl — integrando front-end e back-end com Next.js, React e MUI. Antes disso, atuei como Diretor de Projetos na Empresa Júnior GTI, liderando equipe e entregando aplicações para clientes reais.",
       "Estudo GSAP e Three.js para aprofundar animações web e experiências interativas — este site é o laboratório disso.",
     ],
     highlights: [
@@ -71,7 +71,6 @@ export const siteData: SiteData = {
         description: "Sistema de monitoramento e controle desenvolvido para o laboratório Altlab da UFC. Interface com Next.js, React e MUI integrada a APIs REST do back-end.",
         tech: ["Next.js", "React", "MUI", "TypeScript"],
         context: "Altlab — UFC",
-        image: "/images/projects/wisecontrol.png",
       },
       {
         title: "Portfólio",
@@ -91,7 +90,7 @@ export const siteData: SiteData = {
       {
         role: "Desenvolvedor Front-end",
         company: "Altlab — UFC",
-        period: "Ago/2025 – Atual",
+        period: "Ago/2025 – Mai/2026",
         location: "Fortaleza, CE · Remoto",
         description: [
           "Desenvolvimento do sistema WiseControl com Next.js, React e MUI.",

@@ -37,8 +37,8 @@ const FLOW_FRAGMENT = /* glsl */ `
 
   void main() {
     vec2 vel = (texture2D(uPrev, vUv).rg - 0.5) * 2.0;
-    vel = (texture2D(uPrev, vUv - vel * 0.006).rg - 0.5) * 2.0;
-    vel *= 0.958;
+    vel = (texture2D(uPrev, vUv - vel * 0.004).rg - 0.5) * 2.0;
+    vel *= 0.972;
     vec2 d = vUv - uMouse;
     d.x *= uAspect;
     float influence = exp(-dot(d, d) / 0.004);
@@ -170,6 +170,8 @@ const NEBULA_FRAGMENT = /* glsl */ `
   uniform vec3 uColorB;
   uniform sampler2D uFlow;
   uniform float uNebulaAspect;
+  uniform float uNebulaTone;
+  uniform vec3 uColorBg;
   varying vec2 vUv;
 
   float hash(vec2 p) {
@@ -201,13 +203,14 @@ const NEBULA_FRAGMENT = /* glsl */ `
   void main() {
     vec2 flow = (texture2D(uFlow, vUv).rg - 0.5) * 2.0;
     vec2 uv = vec2(vUv.x * uNebulaAspect, vUv.y);
-    vec2 p = uv * 2.1 + vec2(uTime * 0.016, -uTime * 0.009);
-    p += flow * 0.6;
+    vec2 p = uv * 2.1 + vec2(uTime * 0.032, -uTime * 0.018);
+    p += flow * 0.7;
     float n = fbm(p);
-    float n2 = fbm(p * 1.9 - vec2(uTime * 0.011, uTime * 0.014) + n);
+    float n2 = fbm(p * 1.9 - vec2(uTime * 0.022, uTime * 0.028) + n);
     float gas = smoothstep(0.45, 0.95, n * 0.6 + n2 * 0.55);
-    vec3 col = mix(uColorB, uColorA, smoothstep(0.35, 0.95, n2) * 0.45);
-    float alpha = gas * 0.11 + length(flow) * 0.07;
+    vec3 col = mix(uColorA, uColorB, smoothstep(0.35, 0.95, n2) * 0.2);
+    col = mix(col, uColorBg, (1.0 - uNebulaTone) * 0.18);
+    float alpha = (gas * 0.4 + length(flow) * 0.3) * mix(0.8, 1.0, uNebulaTone);
     gl_FragColor = vec4(col, alpha);
   }
 `;
@@ -344,8 +347,12 @@ export default function HeroSpace() {
       uColorA: { value: colorA },
       uColorB: { value: colorB },
       uFlow: { value: flowB.texture },
-      uFluid: { value: canHover ? 0.02 : 0 },
+      uFluid: { value: canHover ? 0.03 : 0 },
       uNebulaAspect: { value: 1 },
+      uNebulaTone: {
+        value: document.documentElement.classList.contains("dark") ? 1 : 0,
+      },
+      uColorBg: { value: readTokenColor("--color-background") },
     };
 
     const makePointsMaterial = (vertexShader: string) =>
@@ -474,8 +481,12 @@ export default function HeroSpace() {
     const retintOnThemeChange = new MutationObserver(() => {
       const a = readTokenColor("--color-accent");
       const b = readTokenColor("--color-primary");
+      const bg = readTokenColor("--color-background");
+      const dark = document.documentElement.classList.contains("dark");
       gsap.to(sharedUniforms.uColorA.value, { r: a.r, g: a.g, b: a.b, duration: 0.7 });
       gsap.to(sharedUniforms.uColorB.value, { r: b.r, g: b.g, b: b.b, duration: 0.7 });
+      gsap.to(sharedUniforms.uColorBg.value, { r: bg.r, g: bg.g, b: bg.b, duration: 0.7 });
+      gsap.to(sharedUniforms.uNebulaTone, { value: dark ? 1 : 0, duration: 0.7 });
     });
     retintOnThemeChange.observe(document.documentElement, {
       attributes: true,

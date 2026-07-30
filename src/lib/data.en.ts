@@ -7,7 +7,7 @@ export const siteDataEn: SiteData = {
     roles: [
       "I'm a web developer and computer engineering student at UFC - Federal University of Ceará.",
     ],
-    bio: "Front-end developer experienced with React, Next.js and TypeScript. Currently a research fellow at Altlab/UFC. Passionate about interfaces and fluid animations.",
+    bio: "Front-end developer experienced with React, Next.js and TypeScript. Previously at Altlab/UFC and the GTI Junior Enterprise. Passionate about interfaces and fluid animations.",
     photo: "/images/hero.jpeg",
     scrollLabel: "scroll",
     cta: {
@@ -31,7 +31,7 @@ export const siteDataEn: SiteData = {
     title: "About me",
     paragraphs: [
       "Front-end developer with hands-on experience in React, Next.js, TypeScript and Tailwind CSS, focused on responsive interfaces and REST API integration.",
-      "Currently a research fellow at UFC's Altlab laboratory, where I build the WiseControl system — integrating front-end and back-end with Next.js, React and MUI. Before that, I worked as Project Director at the GTI Junior Enterprise, leading a team and delivering applications for real clients.",
+      "I was a research fellow at UFC's Altlab laboratory, where I built the WiseControl system — integrating front-end and back-end with Next.js, React and MUI. Before that, I worked as Project Director at the GTI Junior Enterprise, leading a team and delivering applications for real clients.",
       "I study GSAP and Three.js to deepen my knowledge of web animation and interactive experiences — this site is the lab for that.",
     ],
     highlights: [
@@ -71,7 +71,6 @@ export const siteDataEn: SiteData = {
         description: "Monitoring and control system built for UFC's Altlab laboratory. Interface built with Next.js, React and MUI, integrated with back-end REST APIs.",
         tech: ["Next.js", "React", "MUI", "TypeScript"],
         context: "Altlab — UFC",
-        image: "/images/projects/wisecontrol.png",
       },
       {
         title: "Portfolio",
@@ -91,7 +90,7 @@ export const siteDataEn: SiteData = {
       {
         role: "Front-end Developer",
         company: "Altlab — UFC",
-        period: "Aug/2025 – Present",
+        period: "Aug/2025 – May/2026",
         location: "Fortaleza, Brazil · Remote",
         description: [
           "Development of the WiseControl system with Next.js, React and MUI.",
