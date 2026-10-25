@@ -67,6 +67,21 @@ export const siteDataEn: SiteData = {
     viewSiteLabel: "Visit site",
     items: [
       {
+        title: "Livo",
+        description: "Migraine tracking app built by five UFC students. My part: the offline-first architecture, the database security audit and the design system.",
+        tech: ["React Native", "Expo", "TypeScript", "Supabase"],
+        context: "UFC — team of 5",
+        github: "github.com/MetodoLima/Livo-Enxaqueca",
+      },
+      {
+        title: "telegram-monitor",
+        description: "Personal deal monitor for Telegram groups: keyword and price rules, bot alerts and a settings page. Runs at zero cost on an Oracle VM.",
+        tech: ["Python", "JavaScript", "HTML/CSS", "Oracle Cloud"],
+        context: "Personal",
+        image: "/images/projects/telegram-monitor.png",
+        github: "github.com/CaioViniciusPF/telegram-monitor",
+      },
+      {
         title: "WiseControl",
         description: "Monitoring and control system built for UFC's Altlab laboratory. Interface built with Next.js, React and MUI, integrated with back-end REST APIs.",
         tech: ["Next.js", "React", "MUI", "TypeScript"],

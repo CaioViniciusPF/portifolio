@@ -67,6 +67,21 @@ export const siteData: SiteData = {
     viewSiteLabel: "Ver site",
     items: [
       {
+        title: "Livo",
+        description: "App de registro de crises de enxaqueca, feito por cinco estudantes da UFC. Minha parte: arquitetura offline-first, auditoria de segurança do banco e o design system.",
+        tech: ["React Native", "Expo", "TypeScript", "Supabase"],
+        context: "UFC — equipe de 5",
+        github: "github.com/MetodoLima/Livo-Enxaqueca",
+      },
+      {
+        title: "telegram-monitor",
+        description: "Monitor pessoal de promoções em grupos do Telegram: regras por palavra-chave e preço, alerta por bot e tela de configuração. Roda a custo zero numa VM da Oracle.",
+        tech: ["Python", "JavaScript", "HTML/CSS", "Oracle Cloud"],
+        context: "Pessoal",
+        image: "/images/projects/telegram-monitor.png",
+        github: "github.com/CaioViniciusPF/telegram-monitor",
+      },
+      {
         title: "WiseControl",
         description: "Sistema de monitoramento e controle desenvolvido para o laboratório Altlab da UFC. Interface com Next.js, React e MUI integrada a APIs REST do back-end.",
         tech: ["Next.js", "React", "MUI", "TypeScript"],
